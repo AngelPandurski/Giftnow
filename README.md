@@ -4,19 +4,28 @@
 
 ```
 gift-now/
-├── asset-download/
-│   └── client/       # Next.js frontend приложение
-└── backend/          # Backend сървър
+├── backend/
+└── client/              # Next.js приложение
+    ├── public/
+    ├── src/
+    │   ├── app/
+    │   ├── components/
+    │   ├── hooks/
+    │   ├── lib/
+    │   ├── state/
+    │   └── types/
+    ├── server/
+    └── ... (config файлове)
 ```
 
 ## Стартиране
 
 ```bash
-cd asset-download/client
+cd client
 npm install
 npm run dev
 ```
 
 Отвори [http://localhost:3000](http://localhost:3000) в браузъра.
 
-Подробна документация за технологиите и пакетите – виж `asset-download/client/README.md`.
+Подробна документация – виж `client/README.md`.

@@ -5,7 +5,7 @@ Next.js приложение за проекта Gift Now.
 ## Стартиране
 
 ```bash
-cd asset-download/client
+cd client
 npm install
 npm run dev
 ```
