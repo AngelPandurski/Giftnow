@@ -1,0 +1,5 @@
+export default {
+  root: true,
+  extends: ["next", "next/core-web-vitals"],
+  rules: {},
+};
