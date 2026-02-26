@@ -27,7 +27,6 @@ const HomePage = () => {
 
       {/* Hero promo section */}
       <section className="relative pt-28 pb-20 px-6 lg:px-12 overflow-hidden">
-        {/* Замъглен фон – снимката от логин страницата */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
           style={{

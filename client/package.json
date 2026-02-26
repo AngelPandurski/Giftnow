@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --hostname localhost --webpack",
+    "dev": "next dev --hostname localhost",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --hostname localhost",
     "lint": "eslint"
   },
   "dependencies": {
@@ -42,8 +42,6 @@
     "framer-motion": "^12.34.3",
     "lodash": "^4.17.23",
     "lucide-react": "^0.575.0",
-    "mapbox-gl": "^3.18.1",
-    "next": "16.1.6",
     "next-themes": "^0.4.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -62,7 +60,8 @@
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.24",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "^15.3.6",
+    "next": "^15.3.6",
     "tailwindcss": "^3.4.0",
     "typescript": "^5"
   }

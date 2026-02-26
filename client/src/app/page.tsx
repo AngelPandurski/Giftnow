@@ -1,6 +1,6 @@
 /** Начална страница (/) – показва HomePage с Navbar */
 import Navbar from "@/components/Navbar";
-import HomePage from "./(nondashboard)/landing/HomePage";
+import HomePage from "@/components/HomePage";
 import Image from "next/image";
 
 export default function Home() {

@@ -12,10 +12,8 @@ const HomeHeader = () => {
   const { user: authUser, logout } = useAuth();
   const isAdmin = authUser?.userRole?.toLowerCase() === "admin";
 
-
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
-      {/* Top bar */}
       <div className="flex justify-end items-center h-9 px-6 lg:px-8">
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <span className="hidden sm:inline">Какво търсите?</span>
@@ -25,7 +23,6 @@ const HomeHeader = () => {
         </div>
       </div>
 
-      {/* Main nav */}
       <div className="flex justify-between items-center h-16 px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3" scroll={false}>
           <Image

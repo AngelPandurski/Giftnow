@@ -4,7 +4,7 @@
 import React from "react";
 import StoreProvider from "@/state/redux";
 import { Authenticator } from "@aws-amplify/ui-react";
-import Auth from "./(auth)/authProvider";
+import Auth from "./authProvider";
 import { MockAuthProvider } from "@/lib/mockAuth";
 import { Toaster } from "@/components/ui/sonner";
 

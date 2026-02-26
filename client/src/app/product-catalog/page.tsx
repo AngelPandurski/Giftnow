@@ -1,16 +1,11 @@
-/**
- * Продуктов каталог /product-catalog – за всички логнати потребители.
- * Показва ProductGridSection (мрежа с продукти). Нелогнати се пренасочват към /.
- * Свързано: dashboards/page.tsx пренасочва /dashboards тук.
- */
 "use client";
 
 import React, { useEffect } from "react";
-import ProductGridSection from "../landing/ProductGridSection";
+import ProductGridSection from "@/components/ProductGridSection";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
-const ProductCatalogPage = () => {
+export default function ProductCatalogPage() {
   const { user: authUser, isLoading } = useAuth();
   const router = useRouter();
 
@@ -27,6 +22,4 @@ const ProductCatalogPage = () => {
       <ProductGridSection />
     </div>
   );
-};
-
-export default ProductCatalogPage;
+}
