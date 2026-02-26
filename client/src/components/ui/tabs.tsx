@@ -1,3 +1,4 @@
+/** Табове – превключване между секции със съдържание */
 "use client"
 
 import * as React from "react"

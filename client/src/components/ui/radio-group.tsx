@@ -1,3 +1,4 @@
+/** Радио група – избор на една от няколко опции */
 "use client"
 
 import * as React from "react"

@@ -1,3 +1,4 @@
+/** Поле за въвеждане на текст */
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

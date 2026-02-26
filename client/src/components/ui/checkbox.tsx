@@ -1,3 +1,4 @@
+/** Чекбокс – отметка да/не */
 "use client"
 
 import * as React from "react"

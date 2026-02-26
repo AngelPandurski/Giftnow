@@ -1,3 +1,4 @@
+/** Скелетон – placeholder при зареждане */
 import { cn } from "@/lib/utils"
 
 function Skeleton({

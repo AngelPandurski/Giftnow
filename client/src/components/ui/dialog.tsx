@@ -1,3 +1,4 @@
+/** Модален диалог – overlay с съдържание */
 "use client"
 
 import * as React from "react"

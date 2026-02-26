@@ -1,3 +1,4 @@
+/** Странична лента – collapsible sidebar с меню */
 "use client"
 
 import * as React from "react"

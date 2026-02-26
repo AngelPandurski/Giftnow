@@ -1,3 +1,4 @@
+/** Слайдер – избор на стойност в диапазон */
 "use client"
 
 import * as React from "react"

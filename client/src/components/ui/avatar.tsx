@@ -1,3 +1,4 @@
+/** Аватар – снимка или инициали на потребител */
 "use client"
 
 import * as React from "react"

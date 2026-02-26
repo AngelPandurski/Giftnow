@@ -1,3 +1,4 @@
+/** Селект – избор от списък с опции */
 "use client"
 
 import * as React from "react"

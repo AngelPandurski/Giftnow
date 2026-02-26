@@ -1,3 +1,4 @@
+/** Етикет за форма – свързан с input чрез htmlFor */
 "use client"
 
 import * as React from "react"

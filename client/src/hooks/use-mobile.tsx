@@ -1,3 +1,4 @@
+/** Хук за проверка дали е мобилен екран (max-width 768px) */
 import * as React from "react"
 
 const MOBILE_BREAKPOINT = 768

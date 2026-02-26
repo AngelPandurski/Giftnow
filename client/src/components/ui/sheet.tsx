@@ -1,3 +1,4 @@
+/** Sheet – панел отстрани (drawer) */
 "use client"
 
 import * as React from "react"

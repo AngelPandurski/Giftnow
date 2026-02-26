@@ -1,3 +1,4 @@
+/** Command – палецо за търсене и избор (cmdk) */
 "use client"
 
 import * as React from "react"

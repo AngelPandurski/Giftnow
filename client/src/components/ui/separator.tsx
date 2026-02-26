@@ -1,3 +1,4 @@
+/** Разделител – хоризонтална или вертикална линия */
 "use client"
 
 import * as React from "react"

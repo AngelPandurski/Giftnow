@@ -1,3 +1,4 @@
+/** Toaster за toast известия (sonner) */
 "use client"
 
 import { useTheme } from "next-themes"

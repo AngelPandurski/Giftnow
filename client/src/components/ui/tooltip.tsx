@@ -1,3 +1,4 @@
+/** Тултип – подсказка при hover */
 "use client"
 
 import * as React from "react"

@@ -1,3 +1,4 @@
+/** Бутон – варианти за размер и стил (primary, outline, ghost) */
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
