@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,23 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  UserPlus,
-  Users,
-  Eye,
-  Package,
-  Plus,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { UserPlus, Users, Eye, Package } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import {
-  loadProducts,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-  type Product,
-} from "@/lib/productsStore";
 import { getViewCount, type ViewPeriod } from "@/lib/viewCount";
 
 const PERIOD_LABELS: Record<ViewPeriod, string> = {
@@ -55,17 +41,8 @@ const AdminPage = () => {
 };
 
 function AdminContent() {
-  const [products, setProducts] = useState<Product[]>([]);
   const [viewPeriod, setViewPeriod] = useState<ViewPeriod>("all");
-  const [editingId, setEditingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setProducts(loadProducts());
-  }, []);
-
   const viewCount = getViewCount(viewPeriod);
-
-  const refreshProducts = () => setProducts(loadProducts());
 
   return (
     <div className="min-h-screen relative py-10 px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -127,18 +104,25 @@ function AdminContent() {
           </section>
         </div>
 
-        {/* Управление на артикули */}
-        <section className="mt-8 bg-white rounded-2xl shadow-sm border border-emerald-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Package className="w-5 h-5 text-emerald-600" />
-            Артикули (подаръци)
-          </h2>
-          <ProductsManager
-            products={products}
-            onRefresh={refreshProducts}
-            editingId={editingId}
-            onEdit={setEditingId}
-          />
+        {/* Артикули – линк към страница за редактиране */}
+        <section className="mt-8">
+          <Link
+            href="/admin/products"
+            className="flex items-center gap-4 p-6 bg-white rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md hover:border-emerald-200 transition-all group"
+          >
+            <div className="w-14 h-14 rounded-2xl bg-emerald-100/80 flex items-center justify-center group-hover:bg-emerald-200/80 transition-colors">
+              <Package className="w-7 h-7 text-emerald-600" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">
+                Артикули (подаръци)
+              </h2>
+              <p className="text-sm text-gray-500 mt-0.5">
+                Редактиране на артикули, снимки и описания в каталога
+              </p>
+            </div>
+            <span className="text-emerald-600 group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
         </section>
       </div>
     </div>
@@ -209,222 +193,6 @@ function UserRegistrationForm() {
         Създай потребител
       </Button>
     </form>
-  );
-}
-
-function fileToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-function ProductsManager({
-  products,
-  onRefresh,
-  editingId,
-  onEdit,
-}: {
-  products: Product[];
-  onRefresh: () => void;
-  editingId: string | null;
-  onEdit: (id: string | null) => void;
-}) {
-  const [showAdd, setShowAdd] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newDesc, setNewDesc] = useState("");
-  const [newImage, setNewImage] = useState<string | null>(null);
-
-  const handleAdd = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle.trim()) return;
-    addProduct({
-      title: newTitle.trim(),
-      shortDescription: newDesc.trim() || "—",
-      imageUrl: newImage || undefined,
-    });
-    setNewTitle("");
-    setNewDesc("");
-    setNewImage(null);
-    setShowAdd(false);
-    onRefresh();
-  };
-
-  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !file.type.startsWith("image/")) return;
-    if (file.size > 800 * 1024) {
-      alert("Макс. 800 KB за снимка.");
-      return;
-    }
-    setNewImage(await fileToDataUrl(file));
-  };
-
-  return (
-    <div className="space-y-4">
-      <Button
-        onClick={() => setShowAdd(!showAdd)}
-        className="bg-emerald-600 hover:bg-emerald-700 text-white"
-      >
-        <Plus className="w-4 h-4 mr-2" />
-        Добави артикул
-      </Button>
-
-      {showAdd && (
-        <form onSubmit={handleAdd} className="p-4 rounded-lg bg-emerald-50/50 border border-emerald-100 space-y-3">
-          <Input
-            placeholder="Заглавие на артикула"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            required
-          />
-          <Input
-            placeholder="Кратко описание (напр. 2 бр.)"
-            value={newDesc}
-            onChange={(e) => setNewDesc(e.target.value)}
-          />
-          <div>
-            <Label className="text-sm">Снимка</Label>
-            <div className="mt-1 flex items-center gap-2">
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageSelect}
-                className="max-w-[200px]"
-              />
-              {newImage && (
-                <>
-                  <div className="w-12 h-12 rounded overflow-hidden border flex-shrink-0">
-                    <img src={newImage} alt="Preview" className="w-full h-full object-cover" />
-                  </div>
-                  <Button type="button" variant="outline" size="sm" onClick={() => setNewImage(null)}>
-                    Махни
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button type="submit" size="sm">Запази</Button>
-            <Button type="button" variant="outline" size="sm" onClick={() => setShowAdd(false)}>Отказ</Button>
-          </div>
-        </form>
-      )}
-
-      <div className="space-y-2">
-        {products.map((p) => (
-          <ProductRow
-            key={p.id}
-            product={p}
-            isEditing={editingId === p.id}
-            onEdit={() => onEdit(editingId === p.id ? null : p.id)}
-            onRefresh={onRefresh}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ProductRow({
-  product,
-  isEditing,
-  onEdit,
-  onRefresh,
-}: {
-  product: Product;
-  isEditing: boolean;
-  onEdit: () => void;
-  onRefresh: () => void;
-}) {
-  const [title, setTitle] = useState(product.title);
-  const [desc, setDesc] = useState(product.shortDescription);
-  const [imageUrl, setImageUrl] = useState<string | undefined>(product.imageUrl);
-
-  useEffect(() => {
-    setTitle(product.title);
-    setDesc(product.shortDescription);
-    setImageUrl(product.imageUrl);
-  }, [product.title, product.shortDescription, product.imageUrl]);
-
-  const handleSave = () => {
-    updateProduct(product.id, { title, shortDescription: desc, imageUrl: imageUrl || undefined });
-    onRefresh();
-    onEdit();
-  };
-
-  const handleDeleteProduct = () => {
-    if (confirm("Изтриване на този артикул?")) {
-      deleteProduct(product.id);
-      onRefresh();
-    }
-  };
-
-  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !file.type.startsWith("image/")) return;
-    if (file.size > 800 * 1024) {
-      alert("Макс. 800 KB за снимка.");
-      return;
-    }
-    setImageUrl(await fileToDataUrl(file));
-  };
-
-  if (isEditing) {
-    return (
-      <div className="p-4 rounded-lg bg-emerald-50/50 border border-emerald-100 space-y-3">
-        <div className="flex flex-wrap gap-2 items-center">
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} className="flex-1 min-w-[200px]" placeholder="Заглавие" />
-          <Input value={desc} onChange={(e) => setDesc(e.target.value)} className="w-28" placeholder="Описание" />
-        </div>
-        <div className="flex items-center gap-3">
-          <Label className="text-sm">Снимка</Label>
-          <Input type="file" accept="image/*" onChange={handleImageSelect} className="max-w-[200px]" />
-          {imageUrl && (
-            <>
-              <div className="w-16 h-16 rounded overflow-hidden border flex-shrink-0">
-                <img src={imageUrl} alt="" className="w-full h-full object-cover" />
-              </div>
-              <Button type="button" variant="outline" size="sm" onClick={() => setImageUrl(undefined)}>
-                Махни снимка
-              </Button>
-            </>
-          )}
-        </div>
-        <div className="flex gap-2">
-          <Button size="sm" onClick={handleSave}>Запази</Button>
-          <Button type="button" variant="outline" size="sm" onClick={onEdit}>Отказ</Button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex justify-between items-center py-3 px-4 rounded-lg bg-emerald-50/50 border border-emerald-100 gap-4">
-      <div className="flex items-center gap-3 min-w-0">
-        {product.imageUrl ? (
-          <div className="w-14 h-14 rounded overflow-hidden border flex-shrink-0">
-            <img src={product.imageUrl} alt="" className="w-full h-full object-cover" />
-          </div>
-        ) : (
-          <div className="w-14 h-14 rounded bg-emerald-100/50 flex-shrink-0 flex items-center justify-center text-emerald-400 text-xs">—</div>
-        )}
-        <div className="min-w-0">
-          <p className="font-medium text-gray-900 truncate">{product.title}</p>
-          <p className="text-sm text-emerald-700">{product.shortDescription}</p>
-        </div>
-      </div>
-      <div className="flex gap-2 flex-shrink-0">
-        <Button size="sm" variant="outline" onClick={onEdit}>
-          <Pencil className="w-4 h-4" />
-        </Button>
-        <Button size="sm" variant="outline" className="text-red-600 hover:bg-red-50" onClick={handleDeleteProduct}>
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      </div>
-    </div>
   );
 }
 

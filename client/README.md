@@ -7,7 +7,8 @@ Frontend приложение за сайта Giftnow.bg – платформа 
 - **Начална страница** (`/`) – hero с замъглена снимка, промо, корпоративни подаръци, долна секция с blur
 - **Вход** (`/signin`) – форма за логин (email + парола); Cognito или mock
 - **Продуктов каталог** (`/product-catalog`) – мрежа с артикули (снимки, заглавия, описания)
-- **Админ панел** (`/admin`) – регистрация на потребители, статистика прегледи, CRUD на артикули с качване/премахване на снимки
+- **Админ панел** (`/admin`) – регистрация на потребители, статистика прегледи, модерна опция „Артикули“ → `/admin/products`
+- **Редактиране на артикули** (`/admin/products`) – същият layout като product catalog (замъглен фон, мрежа от карти); hover → Редактирай/Изтрий; диалози за добавяне и редакция (заглавие, описание, снимка)
 - **Navbar** – на всички страници; бутон Изход; потребителят остава логнат до изричен logout, след което се пренасочва към `/`
 
 ---
@@ -22,7 +23,8 @@ Frontend приложение за сайта Giftnow.bg – платформа 
 | `page.tsx` | Начална страница (/) – фиксирана фонова снимка + overlay, `HomePage` |
 | `signin/page.tsx` | Страница за вход – Cognito Authenticator или mock форма (email + парола) |
 | `product-catalog/page.tsx` | Продуктов каталог – защитена страница; пренасочва нелогнати към `/` |
-| `admin/page.tsx` | Админ панел – защитена; само за роля `admin`. Регистрация, прегледи, CRUD на артикули (добавяне, редактиране, изтриване, снимки) |
+| `admin/page.tsx` | Админ панел – защитена; само за роля `admin`. Регистрация, прегледи, линк към „Артикули“ |
+| `admin/products/page.tsx` | Редактиране на артикули – layout като product catalog; hover за Редактирай/Изтрий; диалози за add/edit |
 | `providers.tsx` | Провайдъри – Redux, MockAuth, Amplify Authenticator, `Navbar`, `ViewTracker`, Toaster |
 | `authProvider.tsx` | Auth провайдър – Cognito Authenticator или mock; пренасочване за dashboard страници |
 | `globals.css` | Глобални стилове |
@@ -47,7 +49,7 @@ Frontend приложение за сайта Giftnow.bg – платформа 
 | `viewCount.ts` | Mock брой прегледи (localStorage). `recordView()`, `getViewCount(period)` – daily, weekly, monthly, yearly, all |
 | `mockAuth.tsx` | Mock auth провайдър – `login`, `logout`, потребител в localStorage |
 | `mockAccounts.ts` | Тестови акаунти – angel@test.com / admin123 (admin), ramona@test.com / user123 (tenant) |
-| `utils.ts` | Utility функции (cn за classnames) |
+| `utils.ts` | Utility функции (cn, fileToDataUrl за base64 от File) |
 | `constants.ts` | Константи |
 | `schemas.ts` | Zod схеми |
 
