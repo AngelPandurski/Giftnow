@@ -40,7 +40,7 @@ const Navbar = () => {
               className="border-gray-300 text-gray-700 hover:bg-gray-50"
               onClick={logout}
             >
-              Log ud
+              Изход
             </Button>
           ) : (
             <Link href="/signin">

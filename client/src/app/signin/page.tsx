@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMockAuth } from "@/lib/mockAuth";
+import { MOCK_ACCOUNTS } from "@/lib/mockAccounts";
 
 const userPoolId = process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID;
 const userPoolClientId =
@@ -39,18 +40,34 @@ const SignInRedirect = () => {
   return null;
 };
 
-/** Mock login – без backend */
+/** Mock login – без backend. Валидация срещу запазени тестови акаунти. */
 function MockLoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useMockAuth();
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     if (!email.trim() || !password) return;
-    login(email.trim(), "tenant");
-    router.replace("/product-catalog", { scroll: false });
+
+    const account = MOCK_ACCOUNTS.find(
+      (a) => a.email.toLowerCase() === email.trim().toLowerCase() && a.password === password
+    );
+
+    if (!account) {
+      setError("Грешен email или парола.");
+      return;
+    }
+
+    login(account.email, account.role);
+    if (account.role === "admin") {
+      router.replace("/admin", { scroll: false });
+    } else {
+      router.replace("/product-catalog", { scroll: false });
+    }
   };
 
   return (
@@ -79,8 +96,11 @@ function MockLoginForm() {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="user@example.com"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
+              placeholder="user@test.com"
               className="mt-1 h-11 text-base"
               required
             />
@@ -91,12 +111,18 @@ function MockLoginForm() {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
               placeholder="••••••••"
               className="mt-1 h-11 text-base"
               required
             />
           </div>
+          {error && (
+            <p className="text-sm text-red-600">{error}</p>
+          )}
           <Button type="submit" className="w-full h-11 text-base bg-emerald-600 hover:bg-emerald-700">
             Log in
           </Button>

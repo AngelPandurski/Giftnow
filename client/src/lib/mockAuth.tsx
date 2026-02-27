@@ -7,7 +7,7 @@ const STORAGE_KEY = "giftnow_mock_user";
 
 export type MockUser = {
   email: string;
-  role: "tenant" | "manager" | "admin";
+  role: "user" | "tenant" | "manager" | "admin";
 };
 
 type MockAuthContextType = {

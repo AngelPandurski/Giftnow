@@ -1,25 +1,17 @@
-/** Начална страница – hero, промо, корпоративни подаръци; пренасочва логнати към product-catalog */
+/** Начална страница – hero, промо, корпоративни подаръци */
 "use client";
 
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
 import { Gift, Package, CreditCard } from "lucide-react";
 import HomeHeader from "./HomeHeader";
 
 const HomePage = () => {
   const { user: authUser, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isLoading) return;
-    if (authUser) router.replace("/product-catalog", { scroll: false });
-  }, [authUser, isLoading, router]);
 
   if (isLoading) return null;
-  if (authUser) return null;
 
   return (
     <div className="min-h-screen">
@@ -56,7 +48,7 @@ const HomePage = () => {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/signin">
+              <Link href={authUser ? "/product-catalog" : "/signin"}>
                 <Button
                   size="lg"
                   className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all hover:-translate-y-0.5"
@@ -64,7 +56,7 @@ const HomePage = () => {
                   Виж каталога
                 </Button>
               </Link>
-              <Link href="/signin">
+              <Link href={authUser ? "/product-catalog" : "/signin"}>
                 <Button
                   size="lg"
                   variant="outline"
@@ -138,6 +130,20 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Долна част – замъглена снимка като на hero */}
+      <section className="relative py-24 px-6 lg:px-12 overflow-hidden min-h-[280px]">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
+          style={{
+            backgroundImage: "url(/login-bg.png)",
+            filter: "blur(4px)",
+          }}
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 via-white/50 to-teal-50/40" aria-hidden />
+        <div className="relative z-10 max-w-6xl mx-auto" />
       </section>
     </div>
   );

@@ -7,13 +7,19 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import Auth from "./authProvider";
 import { MockAuthProvider } from "@/lib/mockAuth";
 import { Toaster } from "@/components/ui/sonner";
+import ViewTracker from "@/components/ViewTracker";
+import Navbar from "@/components/Navbar";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <StoreProvider>
+      <ViewTracker />
       <MockAuthProvider>
         <Authenticator.Provider>
-          <Auth>{children}</Auth>
+          <Navbar />
+          <div style={{ paddingTop: "96px" }}>
+            <Auth>{children}</Auth>
+          </div>
           <Toaster closeButton />
         </Authenticator.Provider>
       </MockAuthProvider>
