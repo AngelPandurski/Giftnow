@@ -9,6 +9,7 @@ import { MockAuthProvider } from "@/lib/mockAuth";
 import { Toaster } from "@/components/ui/sonner";
 import ViewTracker from "@/components/ViewTracker";
 import Navbar from "@/components/Navbar";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <MockAuthProvider>
         <Authenticator.Provider>
           <Navbar />
+          <LanguageSwitcher />
           <div style={{ paddingTop: "96px" }}>
             <Auth>{children}</Auth>
           </div>

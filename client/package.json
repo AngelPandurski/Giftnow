@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname localhost",
+    "dev:3001": "next dev --hostname localhost -p 3001",
+    "dev:safe": "ulimit -n 10240 && next dev --hostname localhost",
     "build": "next build",
     "start": "next start --hostname localhost",
     "lint": "eslint"
@@ -42,6 +44,7 @@
     "framer-motion": "^12.34.3",
     "lodash": "^4.17.23",
     "lucide-react": "^0.575.0",
+    "next-intl": "^4.8.3",
     "next-themes": "^0.4.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",

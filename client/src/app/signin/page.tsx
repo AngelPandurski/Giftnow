@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { View, Heading } from "@aws-amplify/ui-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -18,14 +19,17 @@ const userPoolClientId =
   process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_CLIENT_ID;
 const isCognitoConfigured = !!userPoolId && !!userPoolClientId;
 
-const SignInHeader = () => (
-  <View className="mt-4 mb-7 text-center">
-    <Heading level={3} className="!text-2xl !font-bold text-gray-900">
-      Giftnow.bg
-    </Heading>
-    <p className="text-gray-600 mt-2">Влезте в системата</p>
-  </View>
-);
+const SignInHeader = () => {
+  const t = useTranslations("signin");
+  return (
+    <View className="mt-4 mb-7 text-center">
+      <Heading level={3} className="!text-2xl !font-bold text-gray-900">
+        Giftnow.bg
+      </Heading>
+      <p className="text-gray-600 mt-2">{t("title")}</p>
+    </View>
+  );
+};
 
 const SignInRedirect = () => {
   const { authStatus } = useAuthenticator();
@@ -47,6 +51,8 @@ function MockLoginForm() {
   const [error, setError] = useState("");
   const { login } = useMockAuth();
   const router = useRouter();
+  const t = useTranslations("signin");
+  const tCommon = useTranslations("common");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +64,7 @@ function MockLoginForm() {
     );
 
     if (!account) {
-      setError("Грешен email или парола.");
+      setError(t("error"));
       return;
     }
 
@@ -87,11 +93,11 @@ function MockLoginForm() {
           />
         </div>
         <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">
-          Влезте в системата
+          {t("title")}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
             <Input
               id="email"
               type="email"
@@ -106,7 +112,7 @@ function MockLoginForm() {
             />
           </div>
           <div>
-            <Label htmlFor="password">Парола</Label>
+            <Label htmlFor="password">{t("password")}</Label>
             <Input
               id="password"
               type="password"
@@ -124,7 +130,7 @@ function MockLoginForm() {
             <p className="text-sm text-red-600">{error}</p>
           )}
           <Button type="submit" className="w-full h-11 text-base bg-emerald-600 hover:bg-emerald-700">
-            Log in
+            {tCommon("login")}
           </Button>
         </form>
       </div>

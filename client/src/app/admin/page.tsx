@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,14 +18,6 @@ import {
 import { UserPlus, Users, Eye, Package } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { getViewCount, type ViewPeriod } from "@/lib/viewCount";
-
-const PERIOD_LABELS: Record<ViewPeriod, string> = {
-  daily: "Дневна",
-  weekly: "Седмична",
-  monthly: "Месечна",
-  yearly: "Годишна",
-  all: "Общо",
-};
 
 const AdminPage = () => {
   const { user: authUser, isLoading } = useAuth();
@@ -43,6 +36,7 @@ const AdminPage = () => {
 function AdminContent() {
   const [viewPeriod, setViewPeriod] = useState<ViewPeriod>("all");
   const viewCount = getViewCount(viewPeriod);
+  const t = useTranslations("admin");
 
   return (
     <div className="min-h-screen relative py-10 px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -57,14 +51,14 @@ function AdminContent() {
       />
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 via-white/60 to-teal-50/40" aria-hidden />
       <div className="relative z-10 max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-8">Админ панел</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-8">{t("panel")}</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Регистрация на потребител – горе в ляво */}
           <section className="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <UserPlus className="w-5 h-5 text-emerald-600" />
-              Регистрирай потребител
+              {t("registerUser")}
             </h2>
             <UserRegistrationForm />
           </section>
@@ -73,24 +67,24 @@ function AdminContent() {
           <section className="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Eye className="w-5 h-5 text-emerald-600" />
-              Прегледи на сайта
+              {t("siteViews")}
             </h2>
             <div className="space-y-4">
-              <Label>Период</Label>
+              <Label>{t("period")}</Label>
               <Select value={viewPeriod} onValueChange={(v) => setViewPeriod(v as ViewPeriod)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {(Object.keys(PERIOD_LABELS) as ViewPeriod[]).map((p) => (
+                  {(["daily", "weekly", "monthly", "yearly", "all"] as ViewPeriod[]).map((p) => (
                     <SelectItem key={p} value={p}>
-                      {PERIOD_LABELS[p]}
+                      {t(p)}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               <div className="text-3xl font-bold text-emerald-600">{viewCount}</div>
-              <p className="text-sm text-gray-500">брой посещения</p>
+              <p className="text-sm text-gray-500">{t("visits")}</p>
             </div>
           </section>
 
@@ -98,9 +92,9 @@ function AdminContent() {
           <section className="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Users className="w-5 h-5 text-emerald-600" />
-              Регистрирани потребители
+              {t("registeredUsers")}
             </h2>
-            <p className="text-sm text-gray-500">Данните ще идват от backend API.</p>
+            <p className="text-sm text-gray-500">{t("usersNote")}</p>
           </section>
         </div>
 
@@ -115,10 +109,10 @@ function AdminContent() {
             </div>
             <div className="flex-1">
               <h2 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">
-                Артикули (подаръци)
+                {t("articles")}
               </h2>
               <p className="text-sm text-gray-500 mt-0.5">
-                Редактиране на артикули, снимки и описания в каталога
+                {t("articlesDesc")}
               </p>
             </div>
             <span className="text-emerald-600 group-hover:translate-x-1 transition-transform">→</span>
@@ -134,15 +128,16 @@ function UserRegistrationForm() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<string>("");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const t = useTranslations("admin");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
     if (!email || !password || !role) {
-      setMessage({ type: "error", text: "Попълнете всички полета." });
+      setMessage({ type: "error", text: t("fillAll") });
       return;
     }
-    setMessage({ type: "success", text: "Потребителят ще се създаде чрез backend API. (Mock)" });
+    setMessage({ type: "success", text: t("userCreated") });
     setEmail("");
     setPassword("");
     setRole("");
@@ -151,7 +146,7 @@ function UserRegistrationForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("email")}</Label>
         <Input
           id="email"
           type="email"
@@ -162,7 +157,7 @@ function UserRegistrationForm() {
         />
       </div>
       <div>
-        <Label htmlFor="password">Парола</Label>
+        <Label htmlFor="password">{t("password")}</Label>
         <Input
           id="password"
           type="password"
@@ -176,7 +171,7 @@ function UserRegistrationForm() {
         <Label>Роля</Label>
         <Select value={role} onValueChange={setRole}>
           <SelectTrigger className="mt-1">
-            <SelectValue placeholder="Избери роля" />
+            <SelectValue placeholder={t("selectRole")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="user">User</SelectItem>
@@ -190,7 +185,7 @@ function UserRegistrationForm() {
         </p>
       )}
       <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">
-        Създай потребител
+        {t("createUser")}
       </Button>
     </form>
   );

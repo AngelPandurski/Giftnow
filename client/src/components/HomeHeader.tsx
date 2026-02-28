@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Search, ShoppingCart, User, HelpCircle } from "lucide-react";
@@ -11,12 +12,14 @@ import { Search, ShoppingCart, User, HelpCircle } from "lucide-react";
 const HomeHeader = () => {
   const { user: authUser, logout } = useAuth();
   const isAdmin = authUser?.userRole?.toLowerCase() === "admin";
+  const t = useTranslations("common");
+  const tNav = useTranslations("nav");
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/60">
       <div className="flex justify-end items-center h-9 px-6 lg:px-8">
         <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span className="hidden sm:inline">Какво търсите?</span>
+          <span className="hidden sm:inline">{tNav("whatSearch")}</span>
           <button onClick={() => {}} className="p-1.5 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors">
             <Search className="w-4 h-4" />
           </button>
@@ -33,34 +36,34 @@ const HomeHeader = () => {
             className="h-12 sm:h-14 w-auto object-contain"
           />
           <span className="text-xs text-gray-500 hidden sm:block">
-            Повече от подарък
+            {tNav("moreThanGift")}
           </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-gray-600">
           <Link href="#" className="hover:text-gray-900 transition-colors">
-            Фирмени подаръци
+            {tNav("corporateGifts")}
           </Link>
           <Link href="#" className="hover:text-gray-900 transition-colors">
-            Каталози
+            {tNav("catalogs")}
           </Link>
           <Link href="#" className="hover:text-gray-900 transition-colors">
-            Webshop
+            {tNav("webshop")}
           </Link>
           {isAdmin && (
             <Link href="/admin" className="hover:text-gray-900 transition-colors">
-              Admin
+              {t("admin")}
             </Link>
           )}
           <Link href="#" className="hover:text-gray-900 transition-colors">
-            За нас
+            {tNav("about")}
           </Link>
         </nav>
 
         <div className="flex items-center gap-2">
           <Link href="#" className="hidden lg:flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors px-3 py-2 rounded-lg hover:bg-gray-100">
             <HelpCircle className="w-4 h-4" />
-            Нужна помощ?
+            {tNav("needHelp")}
           </Link>
           {authUser ? (
             <Button
@@ -69,12 +72,12 @@ const HomeHeader = () => {
               className="text-gray-700 rounded-full"
               onClick={logout}
             >
-              Log ud
+              {t("logout")}
             </Button>
           ) : (
             <Link href="/signin">
               <Button size="sm" className="bg-gray-900 text-white hover:bg-gray-800 rounded-full px-5 transition-all hover:scale-[1.02]">
-                Log in
+                {t("login")}
               </Button>
             </Link>
           )}

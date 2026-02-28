@@ -4,11 +4,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const { user: authUser, logout } = useAuth();
+  const t = useTranslations("common");
+  const tNav = useTranslations("nav");
 
   return (
     <div
@@ -17,12 +20,12 @@ const Navbar = () => {
     >
       <div className="flex justify-between items-center w-full h-full px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2" scroll={false}>
-          <span className="text-xl font-bold text-gray-900">Gift Now</span>
+          <span className="text-xl font-bold text-gray-900">{tNav("giftNow")}</span>
         </Link>
         <div className="flex items-center gap-6">
           {authUser?.userRole?.toLowerCase() === "admin" && (
             <Link href="/admin" className="text-sm font-medium text-gray-600 hover:text-gray-900 hidden sm:block">
-              Admin
+              {t("admin")}
             </Link>
           )}
           <Link href="/" scroll={false} className="flex items-center shrink-0">
@@ -40,12 +43,12 @@ const Navbar = () => {
               className="border-gray-300 text-gray-700 hover:bg-gray-50"
               onClick={logout}
             >
-              Изход
+              {t("logout")}
             </Button>
           ) : (
             <Link href="/signin">
               <Button className="bg-gray-900 text-white hover:bg-gray-800">
-                Log in
+                {t("login")}
               </Button>
             </Link>
           )}

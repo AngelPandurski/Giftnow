@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +47,9 @@ export default function AdminProductsPage() {
   if (isLoading) return <>Loading...</>;
   if (authUser?.userRole?.toLowerCase() !== "admin") return null;
 
+  const t = useTranslations("adminProducts");
+  const tCommon = useTranslations("common");
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Замъглена снимка като фон – като на product catalog */}
@@ -66,15 +70,15 @@ export default function AdminProductsPage() {
               className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 hover:text-emerald-800"
             >
               <ArrowLeft className="w-4 h-4" />
-              Обратно в админ
+              {t("backToAdmin")}
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Редактиране на артикули</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t("editArticles")}</h1>
             <Button
               onClick={() => setShowAddDialog(true)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Добави артикул
+              {t("addArticle")}
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -84,7 +88,7 @@ export default function AdminProductsPage() {
                 product={product}
                 onEdit={() => setEditingProduct(product)}
                 onDelete={() => {
-                  if (confirm("Изтриване на този артикул?")) {
+                  if (confirm(t("deleteConfirm"))) {
                     deleteProduct(product.id);
                     refreshProducts();
                   }
@@ -131,6 +135,7 @@ function AdminProductCard({
   onDelete: () => void;
 }) {
   const [showActions, setShowActions] = useState(false);
+  const tCommon = useTranslations("common");
 
   return (
     <div
@@ -166,16 +171,16 @@ function AdminProductCard({
             <span className="text-4xl">📷</span>
           </div>
         )}
-        {/* Overlay с бутони за редакция */}
+        {/* Overlay с бутони за редакция – долу вдясно */}
         {showActions && (
-          <div className="absolute inset-0 z-20 bg-black/40 flex items-center justify-center gap-2 transition-opacity">
+          <div className="absolute inset-0 z-20 bg-black/40 flex items-end justify-end p-3 gap-2 transition-opacity">
             <Button size="sm" variant="secondary" onClick={onEdit} className="bg-white/90">
               <Pencil className="w-4 h-4 mr-1" />
-              Редактирай
+              {tCommon("edit")}
             </Button>
             <Button size="sm" variant="destructive" onClick={onDelete} className="bg-red-500/90 hover:bg-red-600">
               <Trash2 className="w-4 h-4 mr-1" />
-              Изтрий
+              {tCommon("delete")}
             </Button>
           </div>
         )}
@@ -200,6 +205,8 @@ function AddProductDialog({
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const t = useTranslations("adminProducts");
+  const tCommon = useTranslations("common");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,7 +226,7 @@ function AddProductDialog({
     const file = e.target.files?.[0];
     if (!file || !file.type.startsWith("image/")) return;
     if (file.size > 800 * 1024) {
-      alert("Макс. 800 KB за снимка.");
+      alert(t("maxImageSize"));
       return;
     }
     setImageUrl(await fileToDataUrl(file));
@@ -229,30 +236,30 @@ function AddProductDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Добави артикул</DialogTitle>
+          <DialogTitle>{t("addArticleTitle")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label>Заглавие</Label>
+            <Label>{t("title")}</Label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Заглавие на артикула"
+              placeholder={t("titlePlaceholder")}
               required
               className="mt-1"
             />
           </div>
           <div>
-            <Label>Кратко описание</Label>
+            <Label>{t("shortDesc")}</Label>
             <Input
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
-              placeholder="напр. 2 бр."
+              placeholder={t("shortDescPlaceholder")}
               className="mt-1"
             />
           </div>
           <div>
-            <Label>Снимка</Label>
+            <Label>{tCommon("image")}</Label>
             <div className="mt-1 flex items-center gap-2 flex-wrap">
               <Input type="file" accept="image/*" onChange={handleImageSelect} className="max-w-[200px]" />
               {imageUrl && (
@@ -261,7 +268,7 @@ function AddProductDialog({
                     <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                   <Button type="button" variant="outline" size="sm" onClick={() => setImageUrl(null)}>
-                    Махни
+                    {tCommon("remove")}
                   </Button>
                 </>
               )}
@@ -269,10 +276,10 @@ function AddProductDialog({
           </div>
           <div className="flex gap-2 pt-2">
             <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
-              Запази
+              {tCommon("save")}
             </Button>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Отказ
+              {tCommon("cancel")}
             </Button>
           </div>
         </form>
@@ -295,6 +302,8 @@ function EditProductDialog({
   const [title, setTitle] = useState(product.title);
   const [desc, setDesc] = useState(product.shortDescription);
   const [imageUrl, setImageUrl] = useState<string | undefined>(product.imageUrl);
+  const t = useTranslations("adminProducts");
+  const tCommon = useTranslations("common");
 
   useEffect(() => {
     setTitle(product.title);
@@ -317,7 +326,7 @@ function EditProductDialog({
     const file = e.target.files?.[0];
     if (!file || !file.type.startsWith("image/")) return;
     if (file.size > 800 * 1024) {
-      alert("Макс. 800 KB за снимка.");
+      alert(t("maxImageSize"));
       return;
     }
     setImageUrl(await fileToDataUrl(file));
@@ -327,19 +336,19 @@ function EditProductDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Редактирай артикул</DialogTitle>
+          <DialogTitle>{t("editArticleTitle")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label>Заглавие</Label>
+            <Label>{t("title")}</Label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} required className="mt-1" />
           </div>
           <div>
-            <Label>Кратко описание</Label>
+            <Label>{t("shortDesc")}</Label>
             <Input value={desc} onChange={(e) => setDesc(e.target.value)} className="mt-1" />
           </div>
           <div>
-            <Label>Снимка</Label>
+            <Label>{tCommon("image")}</Label>
             <div className="mt-1 flex items-center gap-2 flex-wrap">
               <Input type="file" accept="image/*" onChange={handleImageSelect} className="max-w-[200px]" />
               {imageUrl && (
@@ -348,7 +357,7 @@ function EditProductDialog({
                     <img src={imageUrl} alt="" className="w-full h-full object-cover" />
                   </div>
                   <Button type="button" variant="outline" size="sm" onClick={() => setImageUrl(undefined)}>
-                    Махни снимка
+                    {tCommon("removeImage")}
                   </Button>
                 </>
               )}
@@ -356,10 +365,10 @@ function EditProductDialog({
           </div>
           <div className="flex gap-2 pt-2">
             <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
-              Запази
+              {tCommon("save")}
             </Button>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Отказ
+              {tCommon("cancel")}
             </Button>
           </div>
         </form>
