@@ -19,7 +19,7 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className="fixed right-4 top-[130px] z-40 flex flex-col gap-1">
+    <div className="fixed right-4 top-[240px] z-40 flex flex-col gap-1">
       {locales.map((l) => (
         <button
           key={l}
